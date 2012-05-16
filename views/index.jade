@@ -1,0 +1,22 @@
+.container
+  .row
+    .span12
+      .top
+        .hero-unit
+          h1 NODE URL SHORTENER
+          p A Node.js, Express.js, Redis Experiment, Running on Heroku!
+      .row
+        .span12 
+        
+        //display flash messages
+        - var flashTypes = ['info', 'error']
+          each flashType in flashTypes
+            if flash[flashType]
+              p.flash(class=flashType)
+                h1= flash[flashType]
+                br
+          
+          form(class="well form-search", method="post")
+            input(type="text", name="url", id="url", class="input-xlarge search-query span10")
+            button(type="submit" ,class="btn") Shorten URL
+  footer

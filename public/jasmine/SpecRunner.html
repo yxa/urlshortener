@@ -1,0 +1,48 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <title>Jasmine Test Runner For Pomodoro Project</title>
+  <link rel="stylesheet" type="text/css" href="lib/jasmine-1.1/jasmine.css">
+  <script type="text/javascript" src="lib/jasmine-1.1/jasmine.js"></script>
+  <script type="text/javascript" src="lib/jasmine-1.1/jasmine-html.js"></script>
+	
+
+  <script src="../javascripts/vendor/jquery-1.7.2.js"></script>
+  <script src="../javascripts/vendor/underscore.js"></script>
+  <script src="../javascripts/vendor/backbone.js"></script>
+  <script src="../javascripts/vendor/sinon-1.3.2.js"></script>
+  <script src="../javascripts/vendor/jasmine-sinon.js"></script>
+  <script src="../javascripts/vendor/jasmine-jquery.js"></script>
+	
+
+  <!-- include source files here... -->
+  <script type="text/javascript" src="../javascripts/model/realestate.js"></script>
+  <script type="text/javascript" src="../javascripts/collections/realestates.js"></script>
+  <script type="text/javascript" src="../javascripts/routes/approutes.js"></script>
+  <script type="text/javascript" src="../javascripts/view/realestatesview.js"></script>
+  <script type="text/javascript" src="../javascripts/view/realestateview.js"></script>
+  <script type="text/javascript" src="../javascripts/view/realestatesviewdetailed.js"></script>
+  <script type="text/javascript" src="../javascripts/view/headerview.js"></script>
+
+  <!-- include spec files here... -->
+  <script type="text/javascript" src="spec/realestate.spec.js"></script>
+  <script type="text/javascript" src="spec/realestates.spec.js"></script>
+  <script type="text/javascript" src="spec/approutes.spec.js"></script>
+  <script type="text/javascript" src="spec/realestatesview.spec.js"></script>
+  <script type="text/javascript" src="spec/realestateview.spec.js"></script>
+
+  
+  <!-- include helper files here... -->
+  <script type="text/javascript" src="../javascripts/helpers/spec-helpers.js"></script>
+  <script type="text/javascript" src="../javascripts/fixture/realestates.fixture.js"></script>
+  <script type="text/javascript" src="../javascripts/templates/realestate-template.js"></script>
+</head>
+<body>
+
+<script type="text/javascript">
+  jasmine.getEnv().addReporter(new jasmine.TrivialReporter());
+  jasmine.getEnv().execute();
+</script>
+
+</body>
+</html>
