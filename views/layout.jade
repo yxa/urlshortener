@@ -1,12 +1,17 @@
 !!!
-html
+html(lang='en')
   head
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge,chrome=1')
+    meta(name='viewport', content='width=device-width,initial-scale=1')
     title= title
     link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
-    
-    script(src="/javascripts/vendor/require.js", data-main="/javascripts/vendor/main")
-    
-  body!= body
-  //
-    a(href='/jasmine/SpecRunner.html') Run Specs
+  
+  .container
+    body!= body
+      //
+         data-main attribute tells require.js to load scripts/main.js after require.js loads.    
+    footer
+      p &copy; 2012 Yxa
+  script(src="/javascripts/vendor/require/require.js", data-main="/javascripts/vendor/main")

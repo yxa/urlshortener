@@ -1,6 +1,13 @@
 {
+  "authtor": "torbjorn josefsson <torbjorn.josefsson@gmail.com> (yxa.github.com)",
   "name": "pomodoro",
+  "description": "a url shortener written in javascript",
   "version": "0.0.1",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/yxa/urlshortener"
+  },
   "private": true,
   "engines": {
     "node": "0.6.x",

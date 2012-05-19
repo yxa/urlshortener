@@ -1,9 +1,14 @@
 require.config({
-  baseUrl: "/javascripts/vendor"
+  baseUrl: "/javascripts/vendor",
+  paths: {
+    "loader":     "backbone/loader",
+    "jQuery":     "jquery/jquery-1.7.2-loader", //this jquery version is amd ready
+    "Underscore": "underscore/underscore-loader",
+    "Backbone":   "backbone/backbone-loader",
+    "templates":  "../templates"
+  }
 });
 
-require(["order!/javascripts/vendor/jquery-1.7.2.js",
-        "order!/javascripts/vendor/underscore.js",
-        "order!/javascripts/vendor/backbone.js"], function($) {
-
-     });
+require(['app'],function(app){
+  app.init();
+});
