@@ -1,3 +1,5 @@
+var winston = require('../winston');
+
 module.exports = function(app) {
   app.get('/',index);
   app.post('/',createUrl);
@@ -14,7 +16,7 @@ var isUrl = function isUrl(s) {
 };
 
 var createUrl = function createUrl(req, res) {
-  console.log("user tried to shorten this URL < %s >", req.body.url);
+  winston.security("user tried to shorten this URL < %s >", req.body.url);
   var TIMEOUT = 60 * 60 * 24;
 
   if(!req.body.url) {
@@ -26,9 +28,12 @@ var createUrl = function createUrl(req, res) {
       req.body.url = 'http://' + req.body.url;
     }
     var randomSequence = Math.random().toString(36).substr(2, 5);
-    redis.set(randomSequence, req.body.url);
-    redis.expire(randomSequence,TIMEOUT);
-    console.log(req.headers);
+
+    redis.incr("stats:urls");
+    redis.hset("urls:" + randomSequence, "url", req.body.url);
+    redis.lpush("newurls" ,randomSequence);
+    redis.ltrim("newurls", 0,10);
+
     req.flash('info', req.headers.host + '/' + randomSequence);
     res.redirect('/');
   }
@@ -36,15 +41,11 @@ var createUrl = function createUrl(req, res) {
 
 var lookupUrl = function lookupUrl(req, res) {
   var key = req.params.lookup;
-  console.log("the key is %s", key);
   if(key != null && key != 'favicon.ico') {
-    redis.get(key, function(err, reply){
-      console.log("reply back from redis was %s",reply);
+    redis.hget("urls:" + key, "url", function(err, reply){
       if(reply) {
-        console.log("redirecting user");
         res.redirect(reply);
       } else {
-        console.log("redirecting back to home");
         res.redirect('/');
       }
     });

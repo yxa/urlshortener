@@ -60,6 +60,7 @@ app.configure('production', function(){
 });
 
 require('./routes/index')(app);
+require('./routes/ajax')(app);
 
 function NotFound(msg) {
   this.name = 'NotFound';

@@ -5,3 +5,4 @@ dump.rdb
 *.swo
 *.swp
 npm-debug.log
+scripts
