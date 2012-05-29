@@ -1,4 +1,4 @@
-//from the amazing stackoverflow
+//stolen from the amazing stackoverflow
 var getClientIp = function getClientIp(req) {
   var ipAddress;
   // Amazon EC2 / Heroku workaround to get real client IP
@@ -12,6 +12,7 @@ var getClientIp = function getClientIp(req) {
   }
   return ipAddress;
 };
+
 
 exports.getClientIp = function(req) {
   return getClientIp(req);

@@ -55,6 +55,7 @@ var totalCount = function totalCount(req, res) {
     if(reply) {
       res.send(JSON.stringify({totalCount: reply}));
     } else {
+      res.send(JSON.stringify({totalCount: 0}));
     }
   });
 };

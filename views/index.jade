@@ -10,13 +10,13 @@
       .span12 
       
       //display flash messages
-      - var flashTypes = ['info', 'error']
+      - var flashTypes = ['alert-info', 'alert-error']
         each flashType in flashTypes
           if flash[flashType]
-            p.flash(class=flashType)
-              h1= flash[flashType]
-              br
+            div.flash(class=flashType)
+              h1#translated-url= flash[flashType]
         
+        br
         form(class="well form-search", method="post")
           input(type="text", name="url", id="url", class="input-xlarge search-query span10")
-          button(type="submit" ,class="btn") Shorten URL
+          button(type="submit" ,class="btn", name="shorten", id="shorten") Shorten URL
