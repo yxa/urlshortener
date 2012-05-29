@@ -2,7 +2,7 @@ define(['order!jquery/jquery-1.7.2', 'order!underscore/underscore', 'order!backb
   function(){
     return {
       Backbone: Backbone.noConflict(),
-       _: _.noConflict(),
-       $: jQuery.noConflict()
+      _: _.noConflict(),
+      $: jQuery.noConflict()
     };
 });

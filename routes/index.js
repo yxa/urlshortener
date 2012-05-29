@@ -1,6 +1,11 @@
-var winston = require('../winston');
+var winston     = require('../winston'),
+    utils       = require('../utils'),
+    logPrefixes = require('../config/logPrefixes').log.prefixes,
+    redisConfig = require('../config/redis_keys').redis,
+    redisKeys   = redisConfig.keys;
+    redisLimits = redisConfig.limits;
 
-module.exports = function(app) {
+module.exports = function(app,redis) {
   app.get('/',index);
   app.post('/',createUrl);
   app.get('/:lookup',lookupUrl);
@@ -16,23 +21,35 @@ var isUrl = function isUrl(s) {
 };
 
 var createUrl = function createUrl(req, res) {
-  winston.security("user tried to shorten this URL < %s >", req.body.url);
-  var TIMEOUT = 60 * 60 * 24;
+
+  //key value pairs is in log files a golden when using ex Splunk
+  winston.security("user tried to shorten this " + logPrefixes.kvString(logPrefixes.urlPrefix, req.body.url)
+                                                 + " "
+                                                 + logPrefixes.kvString(logPrefixes.ipPrefix, utils.getClientIp(req)));
 
   if(!req.body.url) {
     req.flash('error','Url not specified');
     res.redirect('/');
   } else {
     var containsPrefix = req.body.url.search('http://');
+
     if(containsPrefix === -1) {
       req.body.url = 'http://' + req.body.url;
     }
-    var randomSequence = Math.random().toString(36).substr(2, 5);
 
-    redis.incr("stats:urls");
-    redis.hset("urls:" + randomSequence, "url", req.body.url);
-    redis.lpush("newurls" ,randomSequence);
-    redis.ltrim("newurls", 0,10);
+    var randomSequence =redisKeys.generateUrlPostfixKey();
+
+    redis.multi()
+      .incr(redisKeys.totalCount)
+      .hset(redisKeys.urlPrefix + randomSequence, "url", req.body.url)
+      .lpush(redisKeys.newUrls ,randomSequence)
+      .ltrim(redisKeys.newUrls, 0, redisLimits.totalUrlsInMemory)
+      .exec(function(err, reply){
+        console.log(reply);
+        if(reply) {
+          winston.security("");
+        }
+      });
 
     req.flash('info', req.headers.host + '/' + randomSequence);
     res.redirect('/');
@@ -40,9 +57,11 @@ var createUrl = function createUrl(req, res) {
 };
 
 var lookupUrl = function lookupUrl(req, res) {
+  console.log("entering lookup");
+  console.log(redisKeys);
   var key = req.params.lookup;
   if(key != null && key != 'favicon.ico') {
-    redis.hget("urls:" + key, "url", function(err, reply){
+    redis.hget(redisKeys.urlPrefix + key, "url", function(err, reply){
       if(reply) {
         res.redirect(reply);
       } else {

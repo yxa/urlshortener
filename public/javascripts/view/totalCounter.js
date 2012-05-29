@@ -6,8 +6,6 @@ define([
 ],function($, _, Backbone, totalCounterTemplate){
 
   var totalCounterView = Backbone.View.extend({
-    el: $("footer"),
-
     initialize: function() {
     },
 
@@ -20,8 +18,9 @@ define([
         console.log(data);
         that.$el.html(that.template(data));
       });
+      return this;
     }
   });
-
-  return new totalCounterView;
+  //return a new view to folks including this file, it now works with require.js
+  return new totalCounterView({el: $("footer")});
 });

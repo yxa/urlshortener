@@ -22,6 +22,17 @@ winston.loggers.add('general', {
   }
 });
 
+//general
+winston.loggers.add('warnings', {
+  console: {
+    level: 'warn',
+    colorize: 'true'
+  },
+  file: {
+    filename: './logs/warnings.log'
+  }
+});
+var warning = winston.loggers.get('warnings');
 var security = winston.loggers.get('security');
 var general = winston.loggers.get('general');
 
@@ -31,4 +42,8 @@ exports.general = function(msg,meta) {
 
 exports.security = function(msg,meta) {
   security.warn(msg,meta);
+};
+
+exports.warning = function(msg,meta) {
+  warning.warn(msg,meta);
 };

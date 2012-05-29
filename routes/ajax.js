@@ -1,19 +1,33 @@
-var winston = require('../winston');
-var async = require('asyncjs');
-var _ = require('underscore');
+var winston = require('../winston'),
+    _       = require('underscore'),
+    keys    = require('../config/redis_keys').redis.keys,
+    routes  = require('../config/routes');
 
 module.exports = function(app) {
-  app.all('/ajax/*', function(req, res, next) {
+  //all ajax routes should have a content type of application/json
+  app.all(routes.ajaxRoutePrefix + '*', function(req, res, next) {
     res.contentType('application/json');
     next();
   });
 
-  app.get('/ajax/newurls', newUrls);
-  app.get('/ajax/totalCount', totalCount);
+  console.log(routes);
+
+  app.get(routes.newShortsUrl,newUrls);
+  app.get(routes.totalCountUrl, totalCount);
 };
 
 var newUrls = function newUrls(req, res) {
   redis.lrange("newurls", 0, 10, function(err, reply){
+    async.map(reply, function(uri, cb) {
+      var key = "urls:" + uri
+      redis.hgetall(key, cb);
+    }, function(err, list) {
+      console.log("returning json data");
+      res.json(list.map(function(elm) {return elm.url}));
+    })
+
+
+    /*
     var list = [];
     var size = reply.length;
 
@@ -25,22 +39,22 @@ var newUrls = function newUrls(req, res) {
       }
     };
 
-    var keys = _.map(reply,function(key){
+    var keys = reply.map(function(key){
       return "urls:" + key;
     });
 
     for(var i = 0, max = reply.length; i < max; i += 1) {
       redis.hgetall(keys[i],insert);
     }
+    */
   });
 };
 
 var totalCount = function totalCount(req, res) {
-  redis.get("stats:urls",function(err, reply) {
+  redis.get(keys.totalCount,function(err, reply) {
     if(reply) {
       res.send(JSON.stringify({totalCount: reply}));
     } else {
-      console.log("ERR");
     }
   });
 };
