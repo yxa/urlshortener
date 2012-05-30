@@ -4,12 +4,12 @@
 A simple url shortener
 
 ##Install
-nmp install - this will install all dependencies
-redis-server - install redis
-./bin/devserver - this will run the development server
+* nmp install - this will install all dependencies
+* redis-server - install redis
+* ./bin/devserver - this will run the development server
 
 ##Tests
-npm test
+* npm test
 
 
 ##TODO
