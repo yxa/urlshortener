@@ -402,3 +402,8 @@
 {"level":"warn","message":"received shortening request URL:http://www.dn.se IP:127.0.0.1"}
 {"level":"warn","message":"received shortening request URL:http://www.aftonbladet.se IP:127.0.0.1"}
 {"level":"warn","message":"received shortening request URL:http://www.idg.se IP:127.0.0.1"}
+{"level":"warn","message":"received shortening request URL:http:///www.dn.se IP:127.0.0.1"}
+{"level":"warn","message":"received shortening request URL:http://www.dn.se IP:127.0.0.1"}
+{"level":"warn","message":"received shortening request URL:http://www.aftonbladet.se IP:127.0.0.1"}
+{"level":"warn","message":"received shortening request URL:http://www.idg.se IP:127.0.0.1"}
+{"level":"warn","message":"received shortening request URL:sfsdfsd IP:127.0.0.1"}
