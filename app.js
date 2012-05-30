@@ -1,9 +1,9 @@
-var fs = require('fs'),
-    express = require('express'),
-    RedisStore = require('connect-redis')(express),
-    app = module.exports = express.createServer(),
-    config = require('./config'),
-    winston = require('./winston');
+var fs          = require('fs'),
+    express     = require('express'),
+    RedisStore  = require('connect-redis')(express),
+    app         = module.exports = express.createServer(),
+    config      = require('./config'),
+    winston     = require('./winston');
 
 // Configuration
 app.configure(function(){
@@ -51,7 +51,6 @@ app.configure('production', function(){
     store: new RedisStore({client:redis})
   }));
 });
-
 
 require('./routes/index')(app,redis);
 require('./routes/ajax')(app,redis);

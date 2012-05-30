@@ -5,8 +5,10 @@ var winston     = require('../winston'),
 
 var redisKeys   = redisConfig.keys;
 var redisLimits = redisConfig.limits;
+var db;
 
 module.exports = function(app,redis) {
+  db = redis;
   app.get('/',index);
   app.post('/',createUrl);
   app.get('/:lookup',lookupUrl);
@@ -32,18 +34,18 @@ var createUrl = function createUrl(req, res) {
   //you should create another config file for the binding between the css classes and the flash
   //if its used again in another file
   if(!req.body.url || !isUrl(req.body.url)) {
-    req.flash('alert-error','check your url syntax!');
+    req.flash('alert-error','Err: use http://www.example.com');
     res.redirect('/');
   } else {
     var randomSequence = redisKeys.generateUrlPostfixKey();
 
     //we dont want more than 10 urls in the newurls list, trim it!
-    redis.multi()
+    db.multi()
       .incr(redisKeys.totalCount)
       .hset(redisKeys.urlPrefix + randomSequence, "url", req.body.url)
       .lpush(redisKeys.newUrls ,randomSequence)
       .ltrim(redisKeys.newUrls, 0, redisLimits.maxUrlsInMemory)
-      //what to do with reply?
+      //what to do with reply? should have better error checking
       .exec(function(err, reply){
         if(reply) {
           req.flash('alert-info', req.headers.host + '/' + randomSequence);
@@ -57,11 +59,10 @@ var createUrl = function createUrl(req, res) {
 };
 
 var lookupUrl = function lookupUrl(req, res) {
-  console.log(redisKeys);
   var key = req.params.lookup;
   //favicon wtf, could move the url to something else then /
   if(key != null && key != 'favicon.ico') {
-    redis.hget(redisKeys.urlPrefix + key, "url", function(err, reply){
+    db.hget(redisKeys.urlPrefix + key, "url", function(err, reply){
       if(reply) {
         res.redirect(reply);
       } else {

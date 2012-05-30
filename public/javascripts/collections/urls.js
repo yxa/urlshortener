@@ -4,7 +4,6 @@ define(['Backbone','jQuery','../model/url'],function(Backbone,$,urlModel){
     model: urlModel,
 
     initialize: function() {
-      console.log("init url collection");
     },
 
     getUrls: function() {
@@ -14,7 +13,6 @@ define(['Backbone','jQuery','../model/url'],function(Backbone,$,urlModel){
         self.reset(data);
       });
     }
-
   });
 
   return new urlCollection;

@@ -3,12 +3,18 @@ var Browser = require('zombie'),
     app     = require('../app');
 
 browser = new Browser();
-
 app.listen(app.settings.port);
+
+//use another db for test ENV, dont mess up the development db!
+redis.select(3);
 
 describe('display landing page', function() {
 
   beforeEach(function(){
+    redis.flushdb();
+  });
+
+  after(function(){
     redis.flushdb();
   });
 
@@ -63,17 +69,13 @@ describe('display landing page', function() {
         browser.fill("url","http://www.idg.se").pressButton("shorten-button",function(){
           assert.ok(browser.success);
           var urls = browser.query("#recent-shortenings").childNodes;
-
-          console.log(urls["1"].childNodes[0].innerHTML);
-          console.log(urls["0"].childNodes[0].innerHTML);
-
+          //console.log(urls["1"].childNodes[0].innerHTML);
+          //console.log(urls["0"].childNodes[0].innerHTML);
           assert.equal(urls["0"].childNodes[0].innerHTML,"http://www.idg.se");
           assert.equal(urls["1"].childNodes[0].innerHTML,"http://www.aftonbladet.se");
-
           done();
         });
       });
     });
   });
-
 });

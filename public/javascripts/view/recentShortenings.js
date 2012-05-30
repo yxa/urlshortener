@@ -2,11 +2,11 @@ define([
     'jQuery',
     'Underscore',
     'Backbone',
-    'text!templates/recentShortenings.tmpl',
     '../collections/urls',
     '../view/recentShortening'
-],function($, _, Backbone, recentShorteningsTemplate,urlCollection, recentShorteningView){
+],function($, _, Backbone, urlCollection, recentShorteningView){
 
+  // no need to handle zombie/ghost views, each new post request refreshes the page
   var recentShorteningsView = Backbone.View.extend({
 
     initialize: function() {
