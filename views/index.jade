@@ -4,19 +4,22 @@
       .hero-unit
         h1 NODE URL SHORTENER
         p A Node.js, Express.js, Require.js, Backbone.js and Redis Experiment 
+        p Jade , Stylus , Twitter Bootstrap and Underscore view templates
         p Running on Heroku!
         p JS from the back to the front. 
     .row
-      .span12 
-      
-      //display flash messages
-      - var flashTypes = ['alert-info', 'alert-error']
-        each flashType in flashTypes
-          if flash[flashType]
-            div.flash(class=flashType)
-              h1#translated-url= flash[flashType]
-        
+      .span8 
+        //display flash messages
+        - var flashTypes = ['alert-info', 'alert-error']
+            each flashType in flashTypes
+              if flash[flashType]
+                div.flash(class=flashType)
+                  h1#translated-url= flash[flashType]
+       
         br
         form(class="well form-search", method="post")
-          input(type="text", name="url", id="url", class="input-xlarge search-query span10")
-          button(type="submit" ,class="btn", name="shorten", id="shorten") Shorten URL
+          input(type="text", name="url", id="url", class="input-medium search-query span5")
+          button(type="submit" ,class="btn", name="shorten-button", id="shorten-button") Shorten URL
+      .span4
+          div#stats
+            ul#recent-shortenings.unstyled

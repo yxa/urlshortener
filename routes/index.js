@@ -25,7 +25,7 @@ var isUrl = function isUrl(url) {
 var createUrl = function createUrl(req, res) {
 
   //key value pairs is in log files a golden when using ex Splunk
-  winston.security("received shortening request" + logPrefixes.kvString(logPrefixes.urlPrefix, req.body.url)
+  winston.security("received shortening request " + logPrefixes.kvString(logPrefixes.urlPrefix, req.body.url)
                                                  + " "
                                                  + logPrefixes.kvString(logPrefixes.ipPrefix, utils.getClientIp(req)));
 

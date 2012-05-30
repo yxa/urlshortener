@@ -1,16 +1,14 @@
-var Browser  = require('zombie');
-var assert  = require('assert');
-var app     = require('../app');
+var Browser = require('zombie'),
+    assert  = require('assert'),
+    app     = require('../app');
 
-//Browser.debug = true;
 browser = new Browser();
 
 app.listen(app.settings.port);
 
 describe('display landing page', function() {
 
-  before(function(){
-    console.log("starting test");
+  beforeEach(function(){
     redis.flushdb();
   });
 
@@ -23,10 +21,10 @@ describe('display landing page', function() {
   });
 
   it('should be able post request to shorten url and get total count',function(done){
-   browser.visit("http://localhost:" + app.settings.port,{debug: true}, function(err,browser) {
+   browser.visit("http://localhost:" + app.settings.port,{debug: false}, function(err,browser) {
       if(err) console.log(err.message);
-      browser.fill("url","http://www.dn.se").
-      pressButton("shorten",function(){
+      browser.fill("url","http:///www.dn.se").
+      pressButton("shorten-button",function(){
         assert.ok(browser.success);
         redis.get("stats:urls",function(err,reply){
           assert.equal(reply,"1");
@@ -37,10 +35,10 @@ describe('display landing page', function() {
   });
 
  it('should be able post request and get translated url',function(done){
-   browser.visit("http://localhost:" + app.settings.port,{debug: true}, function(err,browser) {
+   browser.visit("http://localhost:" + app.settings.port,{debug: false}, function(err,browser) {
       if(err) console.log(err.message);
       browser.fill("url","http://www.dn.se").
-      pressButton("shorten",function(){
+      pressButton("shorten-button",function(){
         assert.ok(browser.success);
         var translatedUrl = browser.text("#translated-url").split('/')[1];
         redis.keys("urls:" + translatedUrl, function(err,reply){
@@ -55,5 +53,27 @@ describe('display landing page', function() {
       });
     });
  });
+
+  it('should be able post requests to shorten url and get the most recent shortened urls in view ',function(done){
+   browser.visit("http://localhost:" + app.settings.port,{debug: false}, function(err,browser) {
+      if(err) console.log(err.message);
+      browser.fill("url","http://www.aftonbladet.se").
+      pressButton("shorten-button",function(){
+        assert.ok(browser.success);
+        browser.fill("url","http://www.idg.se").pressButton("shorten-button",function(){
+          assert.ok(browser.success);
+          var urls = browser.query("#recent-shortenings").childNodes;
+
+          console.log(urls["1"].childNodes[0].innerHTML);
+          console.log(urls["0"].childNodes[0].innerHTML);
+
+          assert.equal(urls["0"].childNodes[0].innerHTML,"http://www.idg.se");
+          assert.equal(urls["1"].childNodes[0].innerHTML,"http://www.aftonbladet.se");
+
+          done();
+        });
+      });
+    });
+  });
 
 });

@@ -1,7 +1,11 @@
-var winston = require('../winston'),
-    _       = require('underscore'),
-    keys    = require('../config/redis_keys').redis.keys,
-    routes  = require('../config/routes');
+var winston     = require('../winston'),
+    _           = require('underscore'),
+    async       = require('async'),
+    redisConfig = require('../config/redis_keys'),
+    routes      = require('../config/routes');
+
+var keys        = redisConfig.redis.keys;
+var redisLimits = redisConfig.redis.limits;
 
 module.exports = function(app) {
   //all ajax routes should have a content type of application/json
@@ -10,21 +14,18 @@ module.exports = function(app) {
     next();
   });
 
-  console.log(routes);
-
   app.get(routes.newShortsUrl,newUrls);
   app.get(routes.totalCountUrl, totalCount);
 };
 
 var newUrls = function newUrls(req, res) {
-  redis.lrange("newurls", 0, 10, function(err, reply){
+  redis.lrange(keys.newUrls, 0, redisLimits.maxUrlsInMemory, function(err, reply){
     async.map(reply, function(uri, cb) {
-      var key = "urls:" + uri
+      var key = keys.urlPrefix + uri;
       redis.hgetall(key, cb);
     }, function(err, list) {
-      console.log("returning json data");
-      res.json(list.map(function(elm) {return elm.url}));
-    })
+      res.json(list.map(function(elm) {return {"path": elm.url} }));
+    });
 
 
     /*
